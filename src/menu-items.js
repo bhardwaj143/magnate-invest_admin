@@ -2,7 +2,7 @@ export default {
   items: [
     {
       id: "navigation",
-      title: "Navigation",
+      title: "Administrator",
       type: "group",
       icon: "icon-navigation",
       children: [
@@ -10,19 +10,54 @@ export default {
           id: "dashboard",
           title: "Dashboard",
           type: "item",
-          url: "/dashboard",
           icon: "feather icon-home",
+          url: "/dashboard",
         },
         {
-          id: "bootstrap",
-          title: "Users",
+          id: "Users",
+          title: "Blog",
           type: "item",
-          icon: "feather icon-server",
-          url: "/users/1",
+          icon: "feather icon-users",
+          url: "/blog/1",
+        },
+        {
+          id: "Category",
+          title: "Category",
+          type: "item",
+          icon: "feather icon-users",
+          url: "/category/1",
+        },
+        {
+          id: "Setting",
+          title: "Setting",
+          type: "item",
+          icon: "feather icon-users",
+          url: "/setting/1",
         },
       ],
     },
-    
+    // {
+    //   id: "chart-maps",
+    //   title: "Chart & Maps",
+    //   type: "group",
+    //   icon: "icon-charts",
+    //   children: [
+    //     {
+    //       id: "charts",
+    //       title: "Charts",
+    //       type: "item",
+    //       icon: "feather icon-pie-chart",
+    //       url: "/charts/nvd3",
+    //     },
+    //     {
+    //       id: "maps",
+    //       title: "Map",
+    //       type: "item",
+    //       icon: "feather icon-map",
+    //       url: "/maps/google-map",
+    //     },
+    //   ],
+    // },
     // {
     //   id: "ui-element",
     //   title: "UI ELEMENT",

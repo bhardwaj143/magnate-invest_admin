@@ -14,12 +14,14 @@ import DeleteModal from "../../ReusableComponents/CustomModal/DeleteModal/Delete
 import ModalSpinner from "../../ReusableComponents/Loader/ModalSpinner/ModalSpinner";
 import "./table.css";
 import ToggleNotification from "../../ReusableComponents/Toggle Notifications/ToggleNotification";
+import * as functions from "../../../functions/function";
 
 import {
   changingStatus,
   deletingUser,
-  gettingAllUser,
+  gettingAllUsers,
 } from "../../../redux/actions/userAction";
+import { gettingAllBlogs, deletingBlog } from "../../../redux/actions/blogAction";
 
 const User = (props) => {
   const history = useHistory();
@@ -35,45 +37,42 @@ const User = (props) => {
     getData();
   }, []);
 
+  console.log(props.blogList);
+
   const getData = async () => {
     setLoading(true);
     if (search) {
       window.location.href = "/users/1";
     }
-    const res = await props.getAllUser(page, null);
-    setErrorModal(res);
-    setLoading(false);
-  };
-
-  const searchName = async (pageNumber = page, name) => {
-    setNameSearch(name);
-    const nameString = name.replace(/[^a-zA-Z ]/g, "%20");
-    history.push(`/users/${pageNumber}/${nameString}`);
-    setLoading(true);
-    const res = await props.getAllUser(pageNumber, name);
-    setErrorModal(res);
+    const res = await props.getAllBlog(page, 10);
+    if (res && res.status) {
+      setErrorModal(res.status);
+    } else if (res && res.code) {
+      setErrorModal(res.code);
+    }
     setLoading(false);
   };
 
   const searchPage = async (number) => {
-    const nameString = nameSearch.replace(/[^a-zA-Z ]/g, "%20");
-    history.push(`/users/${number}/${nameString}`);
+    history.push(`/users/${number}`);
     setLoading(true);
-    const res = await props.getAllUser(number, nameSearch);
-    setErrorModal(res);
+    const res = await props.getAllBlog(number);
+    if (res && res.status) {
+      setErrorModal(res.status);
+    } else if (res && res.code) {
+      setErrorModal(res.code);
+    }
     setLoading(false);
   };
 
   const userDelete = async () => {
     modalOpenHandler();
     setLoader(true);
-    const res = await props.deleteUser(deleteId);
-    if (res === 200) {
-      ToggleNotification("DeleteUserSuccess");
+    const res = await props.deletBlog(deleteId);
+    if (res.status && res.status === 200) {
+      ToggleNotification("DeleteBlogSuccess");
       setLoader(false);
-      setTimeout(() => {
-        window.location.href = "/users/1";
-      }, 1000);
+      getData();
       // history.push("/users/1");
     } else {
       setLoader(false);
@@ -89,23 +88,31 @@ const User = (props) => {
   const updatedDate = (data) => {
     if (data) {
       const str = data.split("T");
-      const time = str[1].split(".");
-      return time[0] + " " + str[0];
-    } else {
-      return null;
+      if (str.length === 2) {
+        const res = functions.dateFunction(str[0]);
+        const time = str[1].split(".");
+        return (
+          res.date +
+          " " +
+          res.month +
+          " , " +
+          res.year 
+        );
+      }
     }
   };
 
   const data = [
-    { name: "S.No." },
-    { name: "Name" },
-    { name: "Email" },
-    { name: "Created-At" },
-    { name: "Status" },
-    { name: "Actions", style: "center" },
+    { name: "S.No.", style: "center", width: "14.28%" },
+    { name: "Title", style: "center", width: "14.28%" },
+    { name: "Description", style: "center", width: "14.28%" },
+    { name: "Popular", style: "center", width: "14.28%" },
+    { name: "Trending", style: "center", width: "14.28%" },
+    { name: "Date", style: "center", width: "14.28%" },
+    { name: "Actions", style: "center", width: "14.28%" },
   ];
 
-  const tableData = [{ name: "view" }, { name: "update" }, { name: "delete" }];
+  const tableData = [ { name: "update" }, {name: "delete"}];
 
   const toggleButtonHandler = async (id, status) => {
     const res = await props.changeStatus(id, status);
@@ -114,7 +121,6 @@ const User = (props) => {
 
   return (
     <>
-      {/* <LogCheck status={errorModal}> */}
       <DeleteModal
         status={modalOpen}
         name="user"
@@ -126,50 +132,44 @@ const User = (props) => {
         <Col>
           <Card>
             <Card.Header>
-              <Card.Title as="h5">User Data</Card.Title>
+              <Card.Title as="h5">Blog Data</Card.Title>
               <Button
                 type="button"
                 color="primary"
                 className="float-right"
-                onClick={(e) => history.push("/add-user")}
+                onClick={(e) => history.push("/add-blog")}
               >
                 Add
               </Button>
-              <SearchBar type="user" name={searchName} status={errorModal} />
             </Card.Header>
             <Card.Body>
               {loading ? (
                 <ModifiedLoader />
               ) : (
                 <ModifiedTable status={errorModal} data={data}>
-                  {props.userList &&
-                    props.userList.map((item, index) => {
+                  {props.blogList &&
+                    props.blogList.map((item, index) => {
                       return (
                         <tr
-                          key={item.id}
-                          // onClick={(e) => history.push(`/user/${item.id}`)}
+                          key={item._id}
+                          style={{textAlign: "center"}}
                         >
-                          <td>{page * 10 - 10 + (index + 1)}</td>
-                          <td>{item.fname + " " + item.lname}</td>
-                          <td>{item.email}</td>
-                          <td>{updatedDate(item.created_at)}</td>
-                          {/* <td>{item.created_at}</td> */}
-                          <td>
-                            <ToggleButton
-                              name="user"
-                              changeToggle={() =>
-                                toggleButtonHandler(item.id, item.status)
-                              }
-                              id={item.id}
-                              status={item.status ? item.status : null}
-                            />
+                          <td style={{textAlign: "center"}}>{page * 10 - 10 + (index + 1)}</td>
+                          <td style={{textAlign: "center"}}>{item.title ? item.title : "N/A"}</td>
+                          <td style={{textAlign: "center"}}>{item.discription ? item.discription.length > 30 ? item.discription.slice(0,30) + '...' : item.discription : "N/A"}</td>
+                          <td style={{textAlign: "center"}}>{item.isPopular ? "YES" : "NO"}</td>
+                          <td style={{textAlign: "center"}}>{item.isTreandings ? "YES" : "NO"}</td>
+                          <td style={{textAlign: "center"}}>
+                            {item.createdAt
+                              ? updatedDate(item.createdAt)
+                              : "N/A"}
                           </td>
-                          <td>
+                          <td style={{textAlign: "center"}}>
                             <TableAction
                               data={tableData}
-                              updateURL={`/update-user?id=${item.id}`}
-                              viewURL={`/user?id=${item.id}`}
-                              deleteHandler={() => modalOpenHandler(item.id)}
+                              updateURL={`/update-blog/${item._id}`}
+                              viewURL={`/blog-detail/${item._id}`}
+                              deleteHandler={() => modalOpenHandler(item._id)}
                             />
                           </td>
                         </tr>
@@ -188,7 +188,6 @@ const User = (props) => {
           </Card>
         </Col>
       </Row>
-      {/* </LogCheck> */}
     </>
   );
 };
@@ -196,15 +195,17 @@ const User = (props) => {
 const mapStateToProps = (state) => {
   return {
     userList: state.users.users,
-    totalPage: state.users.pages,
+    totalPage: state.blog.totalBlogs,
+    blogList: state.blog.blogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAllUser: (page, search) => dispatch(gettingAllUser(page, search)),
     deleteUser: (id) => dispatch(deletingUser(id)),
+    deletBlog: (id) => dispatch(deletingBlog(id)),
     changeStatus: (id, status) => dispatch(changingStatus(id, status)),
+    getAllBlog: (page, limit) => dispatch(gettingAllBlogs(page, limit))
   };
 };
 

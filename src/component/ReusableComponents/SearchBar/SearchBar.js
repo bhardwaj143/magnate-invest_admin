@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Form, FormGroup, Input } from "reactstrap";
+import { Form, FormGroup, Input, Button } from "reactstrap";
+import "./SearchBar.css";
 
 const SearchBar = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,14 +13,16 @@ const SearchBar = (props) => {
     <>
       {props.status !== 500 ? (
         <Form onSubmit={onSubmitHandler}>
-          <FormGroup>
+          <FormGroup className="searchbar">
             <Input
               type="text"
-              placeholder="Search By Name"
-              className="col-12"
+              placeholder="Search By Name or Number"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <Button type="submit" color="primary">
+              Search
+            </Button>
           </FormGroup>
         </Form>
       ) : null}

@@ -1,34 +1,26 @@
 import axios from "axios";
-import * as constants from "./constants/appConstants";
 import * as url from "./constants/urlConstants";
-import ToggleNotification from "./component/ReusableComponents/Toggle Notifications/ToggleNotification";
 
 const instance = axios.create({
-  // baseURL: "http://5fc1f26f427d.ngrok.io/QuotaGames/api/auth",
-  baseURL: "https://keshavi.dmlabs.in",
-  // headers: {
-  //   Authorization: localStorage.getItem('keshavi-token') ? `Bearer ${localStorage.getItem('keshavi-token')}` : null,
-  //   "Content-Type": "application/json",
-  //   accept: "application/json",
-  //   "Access-Control-Allow-Origin": "*",
-  // },
+  baseURL: "http://3.88.73.172:3001/v1",
 });
 
-const requestHandler = (request) => {
-  request.headers["Authorization"] = `${constants.token}`;
-  return request;
-};
+const requestHandler = async (config) =>  {
+    config.headers["Authorization"] = await localStorage.getItem("magneto-access-token");
+    return config;
+  }
+
 
 const forgetHandlerOne = (request) => {
   request.headers["Authorization"] = `${localStorage.getItem(
-    "keshavi-forgot-token-1"
+    "magneto-forgot-token-1"
   )}`;
   return request;
 };
 
 const forgetHandlerTwo = (request) => {
   request.headers["Authorization"] = `${localStorage.getItem(
-    "keshavi-forgot-token-2"
+    "magneto-forgot-token-2"
   )}`;
   return request;
 };
@@ -42,41 +34,54 @@ instance.interceptors.request.use((request) => {
     requestHandler(request);
   }
   return request;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 instance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (err) => {
-    console.log(
-      err && err.response && err.response.data ? err.response.data : null
-    );
-    if(err && err.response?.status === 500)
-    {
-      return { status: 500 };
-    }
-    if (
-      err &&
-      err.response &&
+  async (err) => {
+    const originalRequest = err.config;
+    let refreshToken = localStorage.getItem("refreshToken");
+    if (err && err?.response?.data?.code === 400) {
+      return err.response.data;
+    } else if (
+      refreshToken &&
       (err.response.status === 401 || err.response.status === 403)
     ) {
-      return unAutherized();
-    } else {
-      if (err && err.response && err.response.data) {
-        throw err;
-      } else {
-        throw {response: { status: 500} };
+      let res = await instance.post(`/auth/refresh-token`, {
+        refreshToken: refreshToken,
+      });
+      if (res.status && res.status === 200) {
+        unAutherized(res.data.data);
+        originalRequest.headers = {
+          "Authorization": res.data.data.accessToken,
+        };
+        return instance(originalRequest);
+      } else  {
+        loggingOutUser();
       }
+    } else {
+      return err && err.response && err.response.data
+        ? err.response.data
+        : { status: 500 };
     }
   }
 );
 
-const unAutherized = () => {
-  if (localStorage.getItem("quota-games-token")) {
-    localStorage.removeItem("quota-games-token");
+const unAutherized = (data) => {
+  localStorage.setItem("magneto-access-token", data.accessToken)
+  localStorage.setItem("magneto-refresh-token", data.refreshToken);
+};
+
+const loggingOutUser = () => {
+  if (localStorage.getItem("magneto-access-token")) {
+    localStorage.removeItem("magneto-access-token");
+    localStorage.removeItem("magneto-refresh-token");
     window.location.href = "/login";
   }
-};
+};  
 
 export default instance;

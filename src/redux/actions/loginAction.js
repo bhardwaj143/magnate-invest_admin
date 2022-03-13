@@ -1,27 +1,23 @@
-import axios from "../../instance";
+import * as constants from "../../constants/appConstants";
 import * as url from "../../constants/urlConstants";
-import ToggleNotification from "../../component/ReusableComponents/Toggle Notifications/ToggleNotification";
+import axios from "../../instance";
 
 export const loggingUser = (data) => {
   return async (dispatch) => {
-    try {
-      const res = await axios.post(url.loggingUser, data);
-      localStorage.setItem("keshavi-token", res.data?.data?.token);
-      return res;
-    } catch (err) {
-      ToggleNotification("Error", err.response.data.message);
-      // console.log(err.response.data.message);
+    const res = await axios.post(url.loggingUser, data);
+    // console.log(res);
+    if (res && res.status && res.status === 200) {
+      localStorage.setItem("magneto-access-token", res.data.data.accessToken);
+      localStorage.setItem("magneto-refresh-token", res.data.data.refreshToken);
     }
+    return res;
   };
 };
 
 export const loggingOut = () => {
   return async (dispatch) => {
-    try {
-      await localStorage.removeItem("quota-games-token");
-      return true;
-    } catch (err) {
-      ToggleNotification("Error", "Cannot be logged out. Please try again later.");
-    }
+    await localStorage.removeItem("magneto-access-token");
+    await localStorage.removeItem("magneto-refresh-token");
+    return true;
   };
 };

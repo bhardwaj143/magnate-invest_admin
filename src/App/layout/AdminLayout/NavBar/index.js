@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import logo from "../../../../assets/images/logo.png";
 
 import NavLeft from "./NavLeft";
 import NavRight from "./NavRight";
 import Aux from "../../../../hoc/_Aux";
 import DEMO from "../../../../store/constant";
 import * as actionTypes from "../../../../store/actions";
+import "./index.css";
 
 class NavBar extends Component {
   render() {
@@ -36,11 +38,8 @@ class NavBar extends Component {
             >
               <span />
             </a>
-            <a href={DEMO.BLANK_LINK} className="b-brand">
-              <div className="b-bg">
-                <i className="feather icon-trending-up" />
-              </div>
-              <span className="b-title">Datta Able</span>
+            <a href={DEMO.BLANK_LINK} >
+              <img src={logo} alt="Bovinae" className="mobileScreenLogo"/>
             </a>
           </div>
           <a className="mobile-menu" id="mobile-header" href={DEMO.BLANK_LINK}>

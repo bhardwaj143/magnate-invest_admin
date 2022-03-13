@@ -3,17 +3,19 @@ import * as actionTypes from "../actions/userAction";
 const initialState = {
   users: [],
   user: "",
-  pages: "",
+  total_users: "",
   recent_users: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_ALL_USER: {
+      return { ...state, users: action.data };
+    }
+    case actionTypes.TOTAL_USER_DATA: {
       return {
         ...state,
-        users: action.data.response,
-        pages: action.data.total,
+        total_users: action.data.total_records,
       };
     }
     case actionTypes.GET_USER: {
@@ -22,21 +24,9 @@ const reducer = (state = initialState, action) => {
         user: action.data,
       };
     }
-    case actionTypes.DELETE_USER: {
-      const updatedArray = state.users.filter((el) => el.id !== action.data);
-      return {
-        ...state,
-        users: updatedArray,
-      };
-    }
-    case actionTypes.GET_RECENT_USERS: {
-      return {
-        ...state,
-        recent_users: action.data,
-      };
-    }
+    default:
+      return state;
   }
-  return state;
 };
 
 export default reducer;

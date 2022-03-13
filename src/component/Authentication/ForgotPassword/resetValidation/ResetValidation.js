@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Input, Button, Spinner } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import { useHistory } from "react-router";
 import * as functions from "../../../../functions/function";
 import ToggleNotification from "../../../ReusableComponents/Toggle Notifications/ToggleNotification";
 import ErrorLine from "../../../ReusableComponents/ErrorLine/ErrorLine";
+import {useHistory} from "react-router-dom";
+
+import logo from "../../../../assets/images/logo.png";
 
 const ResetValidation = (props) => {
   const history = useHistory();
@@ -41,7 +43,7 @@ const ResetValidation = (props) => {
         setConfirmPasswordError(res.message);
       } else if (res.status === 200) {
         ToggleNotification("ForgetPasswordSuccess");
-        history.replace("/auth/signin-1");
+        history.replace("/auth/signin-1")
       }
     }
     setLoader(false);
@@ -51,7 +53,7 @@ const ResetValidation = (props) => {
     <div className="card">
       <div className="card-body text-center">
         <div className="mb-4">
-          <i className="feather icon-unlock auth-icon" />
+        <img src={logo} alt="Bovinae" className="forgotPasswordLogo" />
         </div>
         <h3 className="mb-4">Reset Password</h3>
         <p style={{ color: "grey" }}>Enter New Password</p>

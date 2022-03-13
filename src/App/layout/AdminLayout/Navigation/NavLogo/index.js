@@ -1,7 +1,9 @@
 import React from "react";
 import DEMO from "./../../../../../store/constant";
 import Aux from "../../../../../hoc/_Aux";
+import logo from "../../../../../assets/images/logo.png"
 import { Link } from "react-router-dom";
+import "./index.css";
 
 const navLogo = (props) => {
   let toggleClass = ["mobile-menu"];
@@ -17,7 +19,8 @@ const navLogo = (props) => {
                         <i className="feather icon-trending-up" />
                     </div> */}
           <Link to="/dashboard">
-            <span className="b-title">Admin Panel</span>
+            <img alt="Bovinae" className="bovinaeLogo" src={logo} />
+            {/* <span className="b-title">Admin Panel</span> */}
           </Link>
         </a>
         <a

@@ -12,7 +12,6 @@ import {
 import EmailValidation from "./emailValidation/EmailValidation";
 import OtpValidation from "./otpValidation/otpValidation";
 import ResetValidation from "./resetValidation/ResetValidation";
-import ToggleNotification from "../../ReusableComponents/Toggle Notifications/ToggleNotification";
 // import { ModalHeader } from 'react-bootstrap';
 
 const ForgotPassword = (props) => {
@@ -26,10 +25,15 @@ const ForgotPassword = (props) => {
   const onSubmitHandlerEmail = async (email) => {
     const obj = { email: email };
     const res = await props.emailVerification(obj);
-    console.log(res);
-    if(res && res.status && res.status === 200)
-    {
+    // console.log(res);
+    if (res.status && res.status === 500) {
+      return { status: 500, message: null };
+    } else if (res.status && res.status === 400) {
+      return { status: 400, message: res.message };
+    } else if (res.status && res.status === 200) {
       renderFunction("otp");
+      setEmail(email);
+      return { status: 200 };
     }
   };
 
@@ -38,9 +42,13 @@ const ForgotPassword = (props) => {
       otp: otp * 1,
     };
     const res = await props.otpVerification(obj);
-    if(res && res.status && res.status === 200)
-    {
+    if (res.status && res.status === 500) {
+      return { status: 500 };
+    } else if (res.status && res.status === 400) {
+      return { status: 400, message: res.message };
+    } else if (res.status && res.status === 200) {
       renderFunction("resetPassword");
+      return { status: 200 };
     }
   };
 
@@ -49,7 +57,13 @@ const ForgotPassword = (props) => {
       password: password,
     };
     const res = await props.resetPassword(obj);
-    return {status: res.status}
+    if (res.status && res.status === 500) {
+      return { status: 500 };
+    } else if (res.status && res.status === 400) {
+      return { status: 400, message: res.message };
+    } else if (res.status && res.status === 200) {
+      return { status: 200 };
+    }
   };
 
   return (

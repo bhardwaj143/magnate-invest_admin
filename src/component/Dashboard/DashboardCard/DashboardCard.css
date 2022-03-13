@@ -1,0 +1,17 @@
+.SpinnerBody {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0px;
+}
+.cardColor{
+    background-color: teal;
+}
+.cardColorBody h6{
+    color: white;
+}
+.cardBodyText1{
+    color: white;
+}
+.cardLogo{
+    width: 100%;
+}

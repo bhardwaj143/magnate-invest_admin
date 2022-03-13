@@ -11,6 +11,7 @@ const ModifiedTable = (props) => {
         <th
           style={el.style === "center" ? { textAlign: "center" } : null}
           key={index}
+          width={el.width ? el.width : ""}
         >
           {el.name}
         </th>
@@ -27,7 +28,7 @@ const ModifiedTable = (props) => {
         </Table>
       ) : props.status === 500 ? (
         <ServerError />
-      ) : props.status === 404 ? (
+      ) : props.status === 404 || props.status === 400 ? (
         <NoDataError />
       ) : null}
     </>

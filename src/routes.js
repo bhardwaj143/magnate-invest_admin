@@ -52,9 +52,29 @@ const ChangePassword = React.lazy(() =>
 );
 const User = React.lazy(() => import("./component/User/Tables/User"));
 const UpdateUser = React.lazy(() =>
-  import("./component/User/UpdateUser/UpdateUser")
+  import("./component/User/Update/update")
 );
-const AddUser = React.lazy(() => import("./component/User/addUser/addUser"));
+const AddUser = React.lazy(() => import("./component/User/Add/add"));
+
+
+const Category = React.lazy(() => import("./component/Category/Tables/UserTable"));
+const UpdateCategory = React.lazy(() =>
+  import("./component/Category/Update/update")
+);
+const AddCategory = React.lazy(() => import("./component/Category/Add/add"));
+
+
+const Setting = React.lazy(() => import("./component/Settings/Tables/UserTable"));
+const UpdateSetting = React.lazy(() =>
+  import("./component/Settings/Update/update")
+);
+const AddSetting = React.lazy(() => import("./component/Settings/Add/add"));
+
+
+
+const ShowAnimal = React.lazy(() => import("./component/Animal/Show/Animal"));
+
+const AnimalTable = React.lazy(() => import("./component/Animal/Table/table"));
 
 const routes = [
   {
@@ -112,7 +132,7 @@ const routes = [
     component: BootstrapTable,
   },
   {
-    path: "/users/:page/:search?",
+    path: "/blog/:page/:search?",
     exact: true,
     name: "Users Table",
     component: BootstrapTable,
@@ -142,14 +162,61 @@ const routes = [
     name: "Change Password",
     component: ChangePassword,
   },
-  { path: "/user", exact: true, name: "User", component: User },
   {
-    path: "/update-user",
+    path: "/blog-detail/:id",
+    exact: true,
+    name: "User",
+    component: User,
+  },
+  {
+    path: "/update-blog/:id",
     exact: true,
     name: "Update User",
     component: UpdateUser,
   },
-  { path: "/add-user", exact: true, name: "Add User", component: AddUser },
+  { path: "/add-blog", exact: true, name: "Add User", component: AddUser },
+  {
+    path: "/update-category/:id",
+    exact: true,
+    name: "Update Category",
+    component: UpdateCategory,
+  },
+  { path: "/add-category", exact: true, name: "Add Category", component: AddCategory },
+  {
+    path: "/category/:page/:search?",
+    exact: true,
+    name: "Category Table",
+    component: Category,
+  },
+
+
+  {
+    path: "/update-setting/:id",
+    exact: true,
+    name: "Update Setting",
+    component: UpdateSetting,
+  },
+  { path: "/add-setting", exact: true, name: "Add Setting", component: AddSetting },
+  {
+    path: "/setting/:page/:search?",
+    exact: true,
+    name: "Setting Table",
+    component: Setting,
+  },
+
+
+  {
+    path: "/animal-detail/:id",
+    exact: true,
+    name: "Show Animal",
+    component: ShowAnimal,
+  },
+  {
+    path: "/animals/:page/:search?",
+    exact: true,
+    name: "Animals Table",
+    component: AnimalTable,
+  },
 ];
 
 export default routes;

@@ -7,7 +7,7 @@ const DeleteModal = (props) => {
       <Modal isOpen={props.status}>
         <ModalHeader>Delete {props.name}</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this {props.name} ?
+          Are you sure, you want to delete this {props.name} ?
         </ModalBody>
         <ModalFooter>
           <Button type="button" color="danger" onClick={props.deleteHandler}>

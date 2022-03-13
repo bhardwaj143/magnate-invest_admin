@@ -75,3 +75,70 @@ export const textValidation = (text, textName) => {
     return null;
   }
 };
+
+export const mobileValidation = (data, name) => {
+  const reg = /^\+?(0|[1-9]\d*)$/;
+  if (!data) {
+    return `The ${name} field is required `;
+  }
+  if (data.length !== 10) {
+    return `The ${name} is not valid`;
+  } else if (!reg.test(data)) {
+    return `The ${name} is not valid`;
+  } else return null;
+};
+
+export const dateFunction = (data) => {
+  const str = data.split("-");
+  let date = str[2];
+  const month = getMonth(str[1]);
+  const obj = {
+    date: date,
+    month: month,
+    year: str[0],
+  };
+  return obj;
+};
+
+export const getMonth = (data) => {
+  switch (data) {
+    case "01": {
+      return "January";
+    }
+    case "02": {
+      return "February";
+    }
+    case "03": {
+      return "March";
+    }
+    case "04": {
+      return "April";
+    }
+    case "05": {
+      return "May";
+    }
+    case "06": {
+      return "June";
+    }
+    case "07": {
+      return "July";
+    }
+    case "08": {
+      return "August";
+    }
+    case "09": {
+      return "September";
+    }
+    case "10": {
+      return "October";
+    }
+    case "11": {
+      return "November";
+    }
+    case "12": {
+      return "December";
+    }
+    default:
+      return;
+  }
+};

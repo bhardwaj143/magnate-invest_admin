@@ -13,6 +13,7 @@ import Avatar1 from "../../../../../assets/images/user/avatar-1.jpg";
 import Avatar2 from "../../../../../assets/images/user/avatar-2.jpg";
 import Avatar3 from "../../../../../assets/images/user/avatar-3.jpg";
 import { loggingOut } from "../../../../../redux/actions/loginAction";
+import profile from "../../../../../assets/images/admin_profile.png";
 
 const NavRight = (props) => {
   const history = useHistory();
@@ -33,7 +34,7 @@ const NavRight = (props) => {
   return (
     <Aux>
       <ul className="navbar-nav ml-auto">
-        <li>
+        {/* <li>
           <Dropdown alignRight={!props.rtlLayout}>
             <Dropdown.Toggle variant={"link"} id="dropdown-basic">
               <i className="icon feather icon-bell" />
@@ -118,7 +119,7 @@ const NavRight = (props) => {
               </div>
             </Dropdown.Menu>
           </Dropdown>
-        </li>
+        </li> */}
         {/* <li className={props.rtlLayout ? "m-r-15" : "m-l-15"}>
           <a
             href={DEMO.BLANK_LINK}
@@ -137,8 +138,8 @@ const NavRight = (props) => {
             </Dropdown.Toggle>
             <Dropdown.Menu alignRight className="profile-notification">
               <div className="pro-head">
-                <img src={Avatar1} className="img-radius" alt="User Profile" />
-                <span>John Doe</span>
+                <img src={profile} className="img-radius" alt="User Profile" />
+                <span>Administrator</span>
                 <p
                   className="dud-logout logout"
                   onClick={logoutHandler}

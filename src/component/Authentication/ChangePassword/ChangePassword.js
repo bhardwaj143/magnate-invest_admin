@@ -66,24 +66,21 @@ const ChangePassword = (props) => {
     const validate = validation();
     if (!validate) {
       const obj = {
-        password: password,
-        oldpassword: oldpassword,
-        confirmPassword: confirmPassword,
+        newPassword: password,
+        oldPassword: oldpassword,
       };
       const res = await props.changePassword(obj);
       if (res.status === 500) {
         ToggleNotification("ServerError");
-        setLoader(false);
-      } else if (res.error === true) {
-        setLoader(false);
+      } else if (res.status === 400) {
         setConfirmPasswordError(res.message);
         ToggleNotification("ChangePasswordFail");
-      } else {
+      } else if (res.status === 200) {
         ToggleNotification("ChangePasswordSuccess");
         history.push("/dashboard");
-        setLoader(false);
       }
     }
+    setLoader(false);
   };
 
   return (

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, Link, useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Form, FormGroup, Button, Input } from "reactstrap";
 import "./../../../assets/scss/style.scss";
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
 import { Spinner } from "reactstrap";
 import { connect } from "react-redux";
+import logo from "../../../assets/images/logo.png";
 import "./signin.css";
 import { loggingUser } from "../../../redux/actions/loginAction";
 import * as functions from "../../../functions/function";
 import ToggleNotification from "../../ReusableComponents/Toggle Notifications/ToggleNotification";
-import ErrorLine from "../../ReusableComponents/ErrorLine/ErrorLine";
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -28,10 +28,12 @@ const Login = (props) => {
     if (emailValidation !== false) {
       err = true;
       setEmailError(emailValidation);
+      setLoader(false);
     }
     if (passwordValidation !== false) {
       err = true;
       setPasswordError(passwordValidation);
+      setLoader(false);
     }
     return err;
   };
@@ -46,13 +48,18 @@ const Login = (props) => {
         password,
       };
       const res = await props.loginUser(obj);
-      if (res && res.status && res.status === 200)
-      {
+      if (res.status && res.status === 500) {
+        ToggleNotification("ServerError");
+        setLoader(false);
+      } else if (res.code && (res.code === 400 || res.code === 404)) {
+        ToggleNotification("Login Fail");
+        setLoader(false);
+      } else {
         ToggleNotification("Success Login");
         window.location.href = "/dashboard";
+        setLoader(false);
       }
     }
-    setLoader(false);
   };
 
   return (
@@ -69,7 +76,7 @@ const Login = (props) => {
           <div className="card">
             <div className="card-body text-center">
               <div className="mb-4">
-                <i className="feather icon-unlock auth-icon" />
+              <img src={logo} alt="Bovinae" className="loginLogo" />
               </div>
               <h3 className="mb-4">Login</h3>
               <Form onSubmit={(e) => onSubmitHandler(e)}>
@@ -84,8 +91,8 @@ const Login = (props) => {
                     }}
                     disabled={loader}
                   />
-                  <ErrorLine error={emailError} />
                 </FormGroup>
+                {emailError && <p style={{ color: "red" }}>* {emailError}</p>}
                 <FormGroup>
                   <Input
                     type="password"
@@ -97,8 +104,10 @@ const Login = (props) => {
                     }}
                     disabled={loader}
                   />
-                  <ErrorLine error={passwordError} /> 
                 </FormGroup>
+                {passwordError && (
+                  <p style={{ color: "red" }}>* {passwordError}</p>
+                )}
                 <Button
                   className="btn shadow-2 mb-4"
                   color="primary"
@@ -108,9 +117,9 @@ const Login = (props) => {
                   {loader ? <Spinner /> : "Login"}
                 </Button>
               </Form>
-              <p className="mb-2 text-muted">
-                <NavLink to="/auth/forgot-password">Forgot password </NavLink>
-              </p>
+              {/* <p className="mb-2 text-muted">
+                <NavLink to="/auth/forgot-password">Forgot Password </NavLink>
+              </p> */}
             </div>
           </div>
         </div>

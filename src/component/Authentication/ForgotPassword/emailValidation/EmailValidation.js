@@ -5,6 +5,8 @@ import ToggleNotification from "../../../ReusableComponents/Toggle Notifications
 import ErrorLine from "../../../ReusableComponents/ErrorLine/ErrorLine";
 import * as functions from "../../../../functions/function";
 
+import logo from "../../../../assets/images/logo.png";
+
 const EmailValidation = (props) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -26,7 +28,12 @@ const EmailValidation = (props) => {
     setLoader(true);
     const validation = emailValidation();
     if (!validation) {
-      await props.submitHandler(email);
+      const res = await props.submitHandler(email);
+      if (res.status && res.status === 500) {
+        ToggleNotification("ServerError");
+      } else if (res.status && res.status === 400) {
+        setEmailError(res.message);
+      }
     }
     setLoader(false);
   };
@@ -35,7 +42,7 @@ const EmailValidation = (props) => {
     <div className="card">
       <div className="card-body text-center">
         <div className="mb-4">
-          <i className="feather icon-unlock auth-icon" />
+          <img src={logo} alt="Bovinae" className="forgotPasswordLogo" />
         </div>
         <h3 className="mb-4">Forgot Password</h3>
         <Form onSubmit={(e) => onSubmitHandler(e)}>

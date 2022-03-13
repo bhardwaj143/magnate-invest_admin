@@ -2,15 +2,16 @@
   "name": "datta-able-rv18.0.4",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://lite.codedthemes.com/datta-able/react/default/",
+  "homepage": "https://bovinae-admin.dmlabs.in",
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "bootstrap-social": "^5.1.1",
+    "downloadbutton": "^1.0.0",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "google-maps-react": "^2.0.2",
     "jquery": "^3.4.0",
-    "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-bootstrap": "^1.0.0-beta.5",
@@ -30,10 +31,11 @@
     "react-window-size": "^1.2.2",
     "reactstrap": "^8.9.0",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sass": "^1.49.9"
   },
   "scripts": {
-    "start": "PORT=4000 react-scripts start",
+    "start": "set PORT=3006 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

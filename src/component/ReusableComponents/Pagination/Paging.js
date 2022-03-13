@@ -4,7 +4,6 @@ import Pagination from "react-js-pagination";
 
 const Paging = (props) => {
   const { page } = useParams();
-  // console.log(page);
   // const [activePage, setCurrentPage] = useState(page * 1);
   const handlePageChange = (pageNumber) => {
     props.searchPage(pageNumber);

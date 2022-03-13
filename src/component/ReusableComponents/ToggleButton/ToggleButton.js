@@ -24,7 +24,7 @@ const ToggleButton = (props) => {
     setLoader(false);
     modalHandler();
     if (res) {
-      if (res === 200) {
+      if (res.status && res.status === 200) {
         ToggleNotification("StatusChangeSuccess");
         setChecked(!checked);
       } else if (res === 500) {

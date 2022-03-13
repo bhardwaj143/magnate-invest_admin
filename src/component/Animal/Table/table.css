@@ -1,0 +1,8 @@
+.productImage {
+  width: 100% ;
+}
+
+.productImage img {
+  width: 90%;
+  border-radius: 8px;
+}

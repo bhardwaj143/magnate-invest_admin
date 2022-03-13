@@ -1,0 +1,22 @@
+.divLine {
+  background-color: #c9c9c9;
+  width: 400px;
+  margin-top: 20px;
+  height: 1px;
+}
+
+.margin-b20 {
+  margin-bottom: 20px;
+}
+
+.cow-image {
+  border-radius: 100px;
+}
+.input-style {
+  padding-top: 200px;
+}
+
+/* .blue-button {
+    background-color: #40d7ff;
+    border-radius: 10px;
+  } */

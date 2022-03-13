@@ -5,6 +5,8 @@ import * as functions from "../../../../functions/function";
 import ToggleNotification from "../../../ReusableComponents/Toggle Notifications/ToggleNotification";
 import ErrorLine from "../../../ReusableComponents/ErrorLine/ErrorLine";
 
+import logo from "../../../../assets/images/logo.png";
+
 const OtpValidation = (props) => {
   const [otp, setOTP] = useState("");
   const [otpError, setOTPError] = useState("");
@@ -26,7 +28,13 @@ const OtpValidation = (props) => {
     setLoader(true);
     const validation = otpValidation();
     if (!validation) {
-      await props.submitHandler(otp);
+      const res = await props.submitHandler(otp);
+      // console.log(res);
+      if (res.status && res.status === 500) {
+        ToggleNotification("ServerError");
+      } else if (res.status && res.status === 400) {
+        setOTPError(res.message);
+      }
     }
     setLoader(false);
   };
@@ -35,7 +43,7 @@ const OtpValidation = (props) => {
     <div className="card">
       <div className="card-body text-center">
         <div className="mb-4">
-          <i className="feather icon-unlock auth-icon" />
+        <img src={logo} alt="Bovinae" className="forgotPasswordLogo" />
         </div>
         <h3 className="mb-4">Reset Password</h3>
         <p style={{ color: "grey" }}>Enter Your OTP!</p>

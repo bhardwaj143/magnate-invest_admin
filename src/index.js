@@ -17,11 +17,21 @@ import config from "./config";
 import "./index.css";
 import Login from "./redux/reducers/loginReducer";
 import Users from "./redux/reducers/userDataReducer";
+import Animals from "./redux/reducers/animalReducer";
+import Dashboard from "./redux/reducers/dashboardReducer";
+import Blog from "./redux/reducers/blogReducer";
+import Category from "./redux/reducers/categoryReducer";
+import Setting from "./redux/reducers/settingReducer";
 
 const reducers = combineReducers({
   reducer: reducer,
   login: Login,
   users: Users,
+  animal: Animals,
+  dashboard: Dashboard,
+  blog: Blog,
+  category: Category,
+  setting: Setting
 });
 
 const store = createStore(reducers, applyMiddleware(thunk));
