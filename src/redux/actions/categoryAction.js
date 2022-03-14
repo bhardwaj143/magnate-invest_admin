@@ -64,7 +64,7 @@ export const gettingParticularCategory = (data) => {
 
 export const updatingCategory = (id, data) => {
   return async (dispatch) => {
-    const res = await axios.put(url.updatingCategory(id), data);
+    const res = await axios.patch(url.updatingCategory(id), data);
     return res;
   };
 };

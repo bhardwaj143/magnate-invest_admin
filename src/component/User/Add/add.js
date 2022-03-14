@@ -66,7 +66,7 @@ const AddUser = (props) => {
       formData.append("blog_Picture", photoUpload);
       formData.append("discription", des);
       const res = await props.addBlog(formData);
-      if (res.status && res.status === 200) {
+      if (res.status && res.status === 201) {
         ToggleNotification("AddBlogSuccess");
         history.push("/blog/1");
       } else if (res.status && res.status === 500) {

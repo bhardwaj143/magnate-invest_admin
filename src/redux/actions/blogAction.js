@@ -40,7 +40,6 @@ export const gettingAllBlogs = (page, limit) => {
 export const addingBlog = (data) => {
   return async (dispatch) => {
     const res = await axios.post(url.addingBlog, data);
-    // console.log(res);
     return res;
   };
 };
@@ -64,7 +63,7 @@ export const gettingParticularBlog = (data) => {
 
 export const updatingBlog = (id, data) => {
   return async (dispatch) => {
-    const res = await axios.put(url.updatingBlog(id), data);
+    const res = await axios.patch(url.updatingBlog(id), data);
     return res;
   };
 };

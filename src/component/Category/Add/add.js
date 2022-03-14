@@ -67,7 +67,7 @@ const AddUser = (props) => {
       formData.append("category_Picture", photoUpload);
       formData.append("discription", des);
       const res = await props.addBlog(formData);
-      if (res.status && res.status === 200) {
+      if (res.status && res.status === 201) {
         ToggleNotification("AddCategorySuccess");
         history.push("/category/1");
       } else if (res.status && res.status === 500) {
