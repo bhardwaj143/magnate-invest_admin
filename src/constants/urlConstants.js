@@ -91,9 +91,6 @@ export const updatingBlog = (id) => {
   return `/blogs/${id}`
 }
 
-export const addBlog = () => {
-  return `/blogs/`
-}
 
 
 export const gettingAllCategories = (page = 1,

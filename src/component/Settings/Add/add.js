@@ -77,7 +77,7 @@ const AddUser = (props) => {
       formData.append("address", des);
       formData.append("contact", contact);
       const res = await props.addBlog(formData);
-      if (res.status && res.status === 201) {
+      if (res.status && res.status === 200 || res.status === 201) {
         ToggleNotification("AddSettingSuccess");
         history.push("/setting/1");
       } else if (res.status && res.status === 500) {

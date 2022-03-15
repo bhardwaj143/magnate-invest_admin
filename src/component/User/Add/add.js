@@ -21,6 +21,8 @@ import ToggleNotification from "../../ReusableComponents/Toggle Notifications/To
 import One from "./img/profile.png";
 import "./add.css";
 import { addingBlog } from "../../../redux/actions/blogAction";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const AddUser = (props) => {
   const history = useHistory();
@@ -28,7 +30,7 @@ const AddUser = (props) => {
   const [photo, setPhoto] = useState(One);
   const [prevState, setPrevState] = useState(One);
   const [photoUpload, setPhotoUpload] = useState("");
-  const [des, setDes] = useState("");
+  const [des, setDes] = useState("<p>Description</p>");
   const [nameError, setNameError] = useState("");
   const [photoError, setPhotoError] = useState("");
   const [desError, setDesError] = useState("");
@@ -85,7 +87,6 @@ const AddUser = (props) => {
     }
   };
 
-
   const imageHandler = (e) => {
     setPhotoUpload(e.target.files[0]);
     const reader = new FileReader();
@@ -97,6 +98,14 @@ const AddUser = (props) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const onEditorChange = (event, editor) => {
+    console.log(editor.getData());
+    setDes(editor.getData());
+    // setDes(e.target.value)
+    // Define your onSubmit function here
+    // ...
+    // for example, setData() here
+  };
   return (
     <>
       <Breadcrumb />
@@ -142,7 +151,7 @@ const AddUser = (props) => {
 
                 <FormGroup>
                   <Label>Description</Label>
-                  <Input
+                  {/* <Input
                     type="textarea"
                     disabled={loader}
                     row={3}
@@ -151,6 +160,23 @@ const AddUser = (props) => {
                       setDesError("");
                       setDes(e.target.value);
                     }}
+                  /> */}
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={des}
+                    onReady={(editor) => {
+                      // You can store the "editor" and use when it is needed.
+                      console.log("Editor is ready to use!", editor);
+                    }}
+                    onChange={(event, editor) => {
+                      onEditorChange(event, editor);
+                    }}
+                    // onBlur={ ( event, editor ) => {
+                    //     console.log( 'Blur.', editor );
+                    // } }
+                    // onFocus={ ( event, editor ) => {
+                    //     console.log( 'Focus.', editor );
+                    // } }
                   />
                   <ErrorLine error={desError} />
                 </FormGroup>
@@ -178,7 +204,7 @@ const AddUser = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addBlog: (data) => dispatch(addingBlog(data))
+    addBlog: (data) => dispatch(addingBlog(data)),
   };
 };
 
