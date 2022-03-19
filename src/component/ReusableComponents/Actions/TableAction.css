@@ -1,0 +1,31 @@
+.Fontawesome:hover {
+  cursor: pointer;
+}
+
+.Fadelete {
+  color: red;
+}
+
+.Fadelete:hover {
+  color: rgb(243, 99, 99);
+}
+
+.Faeye {
+  color: #04a9f5;
+}
+
+.Faeye:hover {
+  color: rgb(111, 111, 236);
+}
+
+.Fapencil {
+  color: green;
+}
+
+.Fapencil:hover {
+  color: rgb(44, 165, 44);
+}
+
+.tableActionRow {
+  justify-content: space-evenly;
+}

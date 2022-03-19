@@ -1,0 +1,9 @@
+.searchbar.form-group {
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.searchbar button.btn.btn-primary {
+  margin: 0;
+}
