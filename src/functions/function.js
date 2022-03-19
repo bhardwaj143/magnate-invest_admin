@@ -66,6 +66,7 @@ export const changePassword = (oldPassword, newPassword, confirmPassword) => {
 };
 
 export const textValidation = (text, textName) => {
+  
   const x = text.replace(/\s/g, "");
   if (!x || !text) {
     return `Please enter the ${textName}`;

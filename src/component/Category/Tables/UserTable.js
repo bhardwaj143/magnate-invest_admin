@@ -104,13 +104,13 @@ const User = (props) => {
   };
 
   const data = [
-    { name: "S.No.", style: "center", width: "14.28%" },
-    { name: "Title", style: "center", width: "14.28%" },
-    { name: "Description", style: "center", width: "14.28%" },
-    { name: "Popular", style: "center", width: "14.28%" },
-    { name: "Trending", style: "center", width: "14.28%" },
-    { name: "Date", style: "center", width: "14.28%" },
-    { name: "Actions", style: "center", width: "14.28%" },
+    { name: "S.No.", style: "center", width: "25%" },
+    { name: "Title", style: "center", width: "25%" },
+    // { name: "Description", style: "center", width: "14.28%" },
+    // { name: "Popular", style: "center", width: "14.28%" },
+    // { name: "Trending", style: "center", width: "14.28%" },
+    { name: "Date", style: "center", width: "25%" },
+    { name: "Actions", style: "center", width: "25%" },
   ];
 
   const tableData = [ { name: "update" }, {name: "delete"}];
@@ -152,9 +152,9 @@ const User = (props) => {
                         >
                           <td style={{textAlign: "center"}}>{page * 10 - 10 + (index + 1)}</td>
                           <td style={{textAlign: "center"}}>{item.name ? item.name : "N/A"}</td>
-                          <td style={{textAlign: "center"}}>{item.discription ? item.discription.length > 30 ? item.discription.slice(0,30) + '...' : item.discription : "N/A"}</td>
+                          {/* <td style={{textAlign: "center"}}>{item.discription ? item.discription.length > 30 ? item.discription.slice(0,30) + '...' : item.discription : "N/A"}</td>
                           <td style={{textAlign: "center"}}>{item.isPopular ? "YES" : "NO"}</td>
-                          <td style={{textAlign: "center"}}>{item.isTreandings ? "YES" : "NO"}</td>
+                          <td style={{textAlign: "center"}}>{item.isTreandings ? "YES" : "NO"}</td> */}
                           <td style={{textAlign: "center"}}>
                             {item.createdAt
                               ? updatedDate(item.createdAt)

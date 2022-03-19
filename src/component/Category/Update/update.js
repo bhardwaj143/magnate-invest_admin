@@ -30,11 +30,17 @@ import { useParams } from "react-router-dom";
 import ToggleNotification from "../../ReusableComponents/Toggle Notifications/ToggleNotification";
 // import { gettingCow, updatingCow } from "../../../redux/actions/cowAction";
 import * as constants from "../../../constants/appConstants";
-import { gettingParticularBlog, updatingBlog } from "../../../redux/actions/blogAction";
-import { gettingParticularCategory, updatingCategory } from "../../../redux/actions/categoryAction";
+import {
+  gettingParticularBlog,
+  updatingBlog,
+} from "../../../redux/actions/blogAction";
+import {
+  gettingParticularCategory,
+  updatingCategory,
+} from "../../../redux/actions/categoryAction";
 
 const AddUser = (props) => {
-  const {id} = useParams();
+  const { id } = useParams();
 
   const history = useHistory();
   const [name, setName] = useState("");
@@ -58,25 +64,30 @@ const AddUser = (props) => {
   const getData = async () => {
     setPageLoader(true);
     const res = await props.getCow(id);
+
     if (res === 404) {
       setErrorCode(res);
     } else if (res === 500) {
       setErrorCode(res);
     }
+    const response = res.data.data;
+    setName(response.name || "");
+    setPhoto(`${constants.baseURL2}/${response.category_Picture}`);
+    setDes(response.discription || "");
     setPageLoader(false);
   };
 
-  useEffect(() => {
-    if (props.cow) {
-      setName(props.cow.name ? props.cow.name : null);
-      setPhoto(
-        props.cow.category_Picture
-          ? `${constants.baseURL}${props.cow.category_Picture}`
-          : null
-      );
-      setDes(props.cow.discription ? props.cow.discription : null);
-    }
-  }, [props.cow]);
+  // useEffect(() => {
+  //   if (props.cow) {
+  //     setName(props.cow.name ? props.cow.name : null);
+  //     setPhoto(
+  //       props.cow.category_Picture
+  //         ? `${constants.baseURL}${props.cow.category_Picture}`
+  //         : null
+  //     );
+  //     setDes(props.cow.discription ? props.cow.discription : null);
+  //   }
+  // }, [props.cow]);
 
   const validate = () => {
     let error = false;
@@ -137,7 +148,7 @@ const AddUser = (props) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  console.log(props.cow)
+  console.log(props.cow);
 
   return (
     <>

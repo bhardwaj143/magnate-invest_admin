@@ -32,7 +32,7 @@ export default {
           title: "Setting",
           type: "item",
           icon: "feather icon-users",
-          url: "/setting/1",
+          url: "/update-setting",
         },
       ],
     },

@@ -191,18 +191,18 @@ const routes = [
 
 
   {
-    path: "/update-setting/:id",
+    path: "/update-setting",
     exact: true,
     name: "Update Setting",
     component: UpdateSetting,
   },
-  { path: "/add-setting", exact: true, name: "Add Setting", component: AddSetting },
-  {
-    path: "/setting/:page/:search?",
-    exact: true,
-    name: "Setting Table",
-    component: Setting,
-  },
+  // { path: "/add-setting", exact: true, name: "Add Setting", component: AddSetting },
+  // {
+  //   path: "/setting/:page/:search?",
+  //   exact: true,
+  //   name: "Setting Table",
+  //   component: Setting,
+  // },
 
 
   {

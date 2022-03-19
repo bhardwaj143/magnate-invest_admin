@@ -128,9 +128,9 @@ export const deletingSetting = (id) => {
 };
 
 export const gettingParticularSetting = (data) => {
-  return `/settings/${data}`;
+  return `/settings`;
 };
 
 export const updatingSetting = (id) => {
-  return `/settings/${id}`
+  return `/settings`
 }

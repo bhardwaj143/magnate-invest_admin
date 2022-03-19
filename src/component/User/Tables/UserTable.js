@@ -160,8 +160,8 @@ const User = (props) => {
                           <td style={{textAlign: "center"}}>{item.isPopular ? "YES" : "NO"}</td>
                           <td style={{textAlign: "center"}}>{item.isTreandings ? "YES" : "NO"}</td>
                           <td style={{textAlign: "center"}}>
-                            {item.createdAt
-                              ? updatedDate(item.createdAt)
+                            {item.updatedAt
+                              ? updatedDate(item.updatedAt)
                               : "N/A"}
                           </td>
                           <td style={{textAlign: "center"}}>

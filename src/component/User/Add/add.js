@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Card,
@@ -13,7 +13,7 @@ import {
   Spinner,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { Breadcrumb } from "react-bootstrap";
+import { Breadcrumb, FormCheck } from "react-bootstrap";
 import * as functions from "../../../functions/function";
 import ErrorLine from "../../ReusableComponents/ErrorLine/ErrorLine";
 
@@ -24,9 +24,12 @@ import { addingBlog } from "../../../redux/actions/blogAction";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
+import Select from 'react-select';
+import { gettingAllCategories } from "../../../redux/actions/categoryAction";
+
 const AddUser = (props) => {
   const history = useHistory();
-  const [name, setName] = useState("");
+  const [name, setName] = useState("<p>Title</p>");
   const [photo, setPhoto] = useState(One);
   const [prevState, setPrevState] = useState(One);
   const [photoUpload, setPhotoUpload] = useState("");
@@ -34,13 +37,49 @@ const AddUser = (props) => {
   const [nameError, setNameError] = useState("");
   const [photoError, setPhotoError] = useState("");
   const [desError, setDesError] = useState("");
+  const [metaName, setMetaName] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+  const [metaKeyword, setMetaKeyword] = useState("");
+  const [metaDescriptionError, setmetaDescriptionError] = useState("");
+  const [metaKeywordError, setmetaKeywordError] = useState("");
+  const [metaNameError, setmetaNameError] = useState("");
+  const [trending, setTrending] = useState(false);
+  const [popular, setPopular] = useState(false);
   const [loader, setLoader] = useState(false);
   const [src, selectFiles] = useState(null);
+
+  const [categoryId, setCategoryId] = useState('');
+  const [categoryError, setCategoryError] = useState('');
+
+  const [options,setOptions] = useState('');
+
+  useEffect(() => {
+    getData();
+  },[])
+
+  const getData = async() => {
+    await props.getCategories('','');
+  }
+
+  useEffect(() => {
+    if(props.category)
+    {
+      const updatedArray = [];
+      props.category.map((el) => {
+        updatedArray.push({value:el._id, label:el.name})
+      })
+      setOptions(updatedArray)
+    }
+  },[props.category])
 
   const validate = () => {
     let error = false;
     setNameError("");
     setDesError("");
+    setmetaDescriptionError("");
+    setmetaKeywordError("");
+    setmetaNameError("");
+    setCategoryError('')
     const nameValidation = functions.textValidation(name, "name");
     if (nameValidation) {
       setNameError(nameValidation);
@@ -51,9 +90,30 @@ const AddUser = (props) => {
       setDesError(desValidation);
       error = true;
     }
+    const metaNameValidation = functions.textValidation(metaName, "metaName");
+    if (metaNameValidation) {
+      setmetaNameError(metaNameValidation);
+      error = true;
+    }
+    const metaDescValidation = functions.textValidation(metaDescription, "metaDescription");
+    if (metaDescValidation) {
+      setmetaDescriptionError(metaDescValidation);
+      error = true;
+    }
+    const metaKeywordValidation = functions.textValidation(metaKeyword, "metaKeyword");
+    if (metaKeywordValidation) {
+      setmetaKeywordError(metaKeywordValidation);
+      error = true;
+    }
+   
     if (photo === prevState) {
       error = true;
       setPhotoError("Please upload the image of Cow");
+    }
+    if(!categoryId)
+    {
+      error = true;
+      setCategoryError('Please select a category');
     }
     return error;
   };
@@ -67,6 +127,13 @@ const AddUser = (props) => {
       formData.append("title", name);
       formData.append("blog_Picture", photoUpload);
       formData.append("discription", des);
+      formData.append("metaDescription", metaDescription);
+      formData.append("metaKeyword", metaKeyword);
+      formData.append("metaName", metaName);
+      formData.append("isTreanding", trending);
+      formData.append("isPopular", popular);
+      formData.append("categoryId", categoryId);
+
       const res = await props.addBlog(formData);
       if (res.status && res.status === 201) {
         ToggleNotification("AddBlogSuccess");
@@ -98,13 +165,11 @@ const AddUser = (props) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const onEditorChange = (event, editor) => {
-    console.log(editor.getData());
+  const onDescChange = (event, editor) => {
     setDes(editor.getData());
-    // setDes(e.target.value)
-    // Define your onSubmit function here
-    // ...
-    // for example, setData() here
+  };
+  const onTitleChange = (event, editor) => {
+    setName(editor.getData());
   };
   return (
     <>
@@ -136,14 +201,17 @@ const AddUser = (props) => {
               <div className="col-12 col-md-7 col-lg-8 col-xl-9">
                 <FormGroup className="">
                   <Label>Title</Label>
-                  <Input
-                    disabled={loader}
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => {
+
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={name}
+                    onReady={(editor) => {
+                      // You can store the "editor" and use when it is needed.
+                      console.log("Editor is ready to use!", editor);
+                    }}
+                    onChange={(event, editor) => {
                       setNameError("");
-                      setName(e.target.value);
+                      onTitleChange(event, editor);
                     }}
                   />
                   <ErrorLine error={nameError} />
@@ -151,16 +219,7 @@ const AddUser = (props) => {
 
                 <FormGroup>
                   <Label>Description</Label>
-                  {/* <Input
-                    type="textarea"
-                    disabled={loader}
-                    row={3}
-                    value={des}
-                    onChange={(e) => {
-                      setDesError("");
-                      setDes(e.target.value);
-                    }}
-                  /> */}
+
                   <CKEditor
                     editor={ClassicEditor}
                     data={des}
@@ -169,17 +228,85 @@ const AddUser = (props) => {
                       console.log("Editor is ready to use!", editor);
                     }}
                     onChange={(event, editor) => {
-                      onEditorChange(event, editor);
+                      onDescChange(event, editor);
                     }}
-                    // onBlur={ ( event, editor ) => {
-                    //     console.log( 'Blur.', editor );
-                    // } }
-                    // onFocus={ ( event, editor ) => {
-                    //     console.log( 'Focus.', editor );
-                    // } }
                   />
                   <ErrorLine error={desError} />
                 </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Name</Label>
+                  <Input
+                    disabled={loader}
+                    type="text"
+                    placeholder="Meta Name"
+                    value={metaName}
+                    onChange={(e) => {
+                      setMetaName(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaNameError} />
+                </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Description </Label>
+                  <Input
+                    disabled={loader}
+                    type="textarea"
+                    placeholder="Meta Description"
+                    value={metaDescription}
+                    onChange={(e) => {
+                      setMetaDescription(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaDescriptionError} />
+                </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Keyword</Label>
+                  <Input
+                    disabled={loader}
+                    type="text"
+                    placeholder="Meta Keyword"
+                    value={metaKeyword}
+                    onChange={(e) => {
+                      setMetaKeyword(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaKeywordError} />
+                </FormGroup>
+                <FormGroup>
+                  <Form>
+                    Trending
+                    <FormCheck
+                      type="switch"
+                      id="trending"
+                      value={trending}
+                      onClick={() => setTrending(!trending)}
+                    />
+                  </Form>
+                </FormGroup>
+                <FormGroup>
+                  <Form>
+                    Popular
+                    <FormCheck
+                      type="switch"
+                      id="popular"
+                      value={popular}
+                      onClick={() => {setPopular(!popular)}}
+                    />
+                  </Form>
+                </FormGroup>
+                {
+                  options && 
+                <FormGroup>
+                    <Label>
+                      Category
+                    </Label>
+                    <Select options={options} defaultValue={categoryId} onChange={(e) => {
+                      setCategoryError('')
+                      setCategoryId(e.value)
+                      }}/>
+                    <ErrorLine error={categoryError} />
+                </FormGroup>
+                }
               </div>
             </div>
           </CardBody>
@@ -202,10 +329,17 @@ const AddUser = (props) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    category: state.category.categories
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     addBlog: (data) => dispatch(addingBlog(data)),
+    getCategories: () => dispatch(gettingAllCategories())
   };
 };
 
-export default connect(null, mapDispatchToProps)(AddUser);
+export default connect(mapStateToProps, mapDispatchToProps)(AddUser);

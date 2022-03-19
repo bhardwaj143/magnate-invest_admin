@@ -64,7 +64,7 @@ export const gettingParticularSetting = (data) => {
 
 export const updatingSetting = (id, data) => {
   return async (dispatch) => {
-    const res = await axios.put(url.updatingSetting(id), data);
+    const res = await axios.patch(url.updatingSetting(id), data);
     return res;
   };
 };

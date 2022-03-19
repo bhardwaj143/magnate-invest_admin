@@ -39,7 +39,6 @@ export const gettingAllBlogs = (page, limit) => {
 
 
 export const addingBlog = (data) => {
-  debugger
   return async (dispatch) => {
     const res = await axios.post(url.addingBlog, data);
     return res;

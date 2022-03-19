@@ -65,7 +65,7 @@ const AddUser = (props) => {
       setName(props.cow.name ? props.cow.name : null);
       setPhoto(
         props.cow.logo
-          ? `${constants.baseURL}${props.cow.logo}`
+          ? `${constants.baseURL2}/${props.cow.logo}`
           : null
       );
       setContact(props.cow.contact ? props.cow.contact : '' );
@@ -111,7 +111,7 @@ const AddUser = (props) => {
       const res = await props.updateCow(id, formData);
       if (res.status && res.status === 200) {
         ToggleNotification("UpdateSettingSuccess");
-        history.push(`/setting/1`);
+        history.push(`/update-setting`);
       } else if (res.status && res.status === 500) {
         ToggleNotification("ServerError");
       } else if (res.code && res.code === 400) {

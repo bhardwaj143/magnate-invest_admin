@@ -17,7 +17,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { Breadcrumb } from "react-bootstrap";
+import { Breadcrumb, FormCheck } from "react-bootstrap";
 import * as functions from "../../../functions/function";
 import ErrorLine from "../../ReusableComponents/ErrorLine/ErrorLine";
 import useQuery from "../../ReusableComponents/customHooks/queryHook";
@@ -31,6 +31,12 @@ import ToggleNotification from "../../ReusableComponents/Toggle Notifications/To
 // import { gettingCow, updatingCow } from "../../../redux/actions/cowAction";
 import * as constants from "../../../constants/appConstants";
 import { gettingParticularBlog, updatingBlog } from "../../../redux/actions/blogAction";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { gettingAllCategories } from "../../../redux/actions/categoryAction";
+
+import Select from 'react-select';
+
 
 const AddUser = (props) => {
   const {id} = useParams();
@@ -49,38 +55,78 @@ const AddUser = (props) => {
   const [errorCode, setErrorCode] = useState();
   const [image, setImage] = useState(null);
   const [src, selectFiles] = useState(null);
+  const [metaName, setMetaName] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+  const [metaKeyword, setMetaKeyword] = useState("");
+  const [metaDescriptionError, setmetaDescriptionError] = useState("");
+  const [metaKeywordError, setmetaKeywordError] = useState("");
+  const [metaNameError, setmetaNameError] = useState("");
+  const [trending, setTrending] = useState(false);
+  const [popular, setPopular] = useState(false);
+
+  const [categoryId, setCategoryId] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryError, setCategoryError] = useState('');
+
+  const [options,setOptions] = useState('');
 
   useEffect(() => {
     getData();
   }, []);
 
+  useEffect(() => {
+    if(props.category)
+    {
+      const updatedArray = [];
+      props.category.map((el) => {
+        updatedArray.push({value:el._id, label:el.name})
+      })
+      setOptions(updatedArray)
+    }
+  },[props.category])
+
   const getData = async () => {
     setPageLoader(true);
     const res = await props.getCow(id);
+    await props.getCategories('','');
     if (res === 404) {
       setErrorCode(res);
     } else if (res === 500) {
       setErrorCode(res);
     }
+    const response = res.data.data;
+    setName(response.title || "");
+    setPhoto(`${constants.baseURL2}/${response.blog_Picture}`);
+    setDes(response.discription || "");
+    setTrending(response.isTreandings);
+    setPopular(response.isPopular);
+    setMetaDescription(response.metaDescription || "");
+    setMetaKeyword(response.metaKeyword || "");
+    setMetaName(response.metaName || "");
     setPageLoader(false);
+    setCategoryId(response.categoryId._id || '');
+    setCategoryName(response.categoryId.name || '');
   };
 
-  useEffect(() => {
-    if (props.cow) {
-      setName(props.cow.title ? props.cow.title : null);
-      setPhoto(
-        props.cow.blog_Picture
-          ? `${constants.baseURL}${props.cow.blog_Picture}`
-          : null
-      );
-      setDes(props.cow.discription ? props.cow.discription : null);
-    }
-  }, [props.cow]);
+  // useEffect(() => {
+  //   if (props.cow) {
+  //     setName(props.cow.title ? props.cow.title : null);
+  //     setPhoto(
+  //       props.cow.blog_Picture
+  //         ? `${constants.baseURL}${props.cow.blog_Picture}`
+  //         : null
+  //     );
+  //     setDes(props.cow.discription ? props.cow.discription : null);
+  //   }
+  // }, [props.cow]);
 
   const validate = () => {
     let error = false;
     setNameError("");
     setDesError("");
+    setmetaDescriptionError("");
+    setmetaKeywordError("");
+    setmetaNameError("");
     const nameValidation = functions.textValidation(name, "name");
     if (nameValidation) {
       setNameError(nameValidation);
@@ -90,6 +136,26 @@ const AddUser = (props) => {
     if (desValidation) {
       setDesError(desValidation);
       error = true;
+    }
+    const metaNameValidation = functions.textValidation(metaName, "metaName");
+    if (metaNameValidation) {
+      setmetaNameError(metaNameValidation);
+      error = true;
+    }
+    const metaDescValidation = functions.textValidation(metaDescription, "metaDescription");
+    if (metaDescValidation) {
+      setmetaDescriptionError(metaDescValidation);
+      error = true;
+    }
+    const metaKeywordValidation = functions.textValidation(metaKeyword, "metaKeyword");
+    if (metaKeywordValidation) {
+      setmetaKeywordError(metaKeywordValidation);
+      error = true;
+    }
+    if(!categoryId)
+    {
+      error = true;
+      setCategoryError('Please select a category');
     }
     return error;
   };
@@ -105,6 +171,12 @@ const AddUser = (props) => {
         formData.append("blog_Picture", photoUpload);
       }
       formData.append("discription", des);
+      formData.append("metaDescription", metaDescription);
+      formData.append("metaKeyword", metaKeyword);
+      formData.append("metaName", metaName);
+      formData.append("isTreandings", trending);
+      formData.append("isPopular", popular);
+      formData.append("categoryId", categoryId);
       const res = await props.updateCow(id, formData);
       if (res.status && res.status === 200) {
         ToggleNotification("UpdateBlogSuccess");
@@ -136,8 +208,12 @@ const AddUser = (props) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  console.log(props.cow)
-
+  const onDescChange = (event, editor) => {
+    setDes(editor.getData());
+  };
+  const onTitleChange = (event, editor) => {
+    setName(editor.getData());
+  };
   return (
     <>
       <Breadcrumb />
@@ -174,35 +250,115 @@ const AddUser = (props) => {
                 </div>
 
                 <div className="col-12 col-md-7 col-lg-8 col-xl-9">
-                  <FormGroup className="">
-                    <Label>Title</Label>
-                    <Input
-                      disabled={loader}
-                      type="text"
-                      placeholder="Name"
-                      value={name}
-                      onChange={(e) => {
-                        setNameError("");
-                        setName(e.target.value);
-                      }}
-                    />
-                    <ErrorLine error={nameError} />
-                  </FormGroup>
+                <FormGroup className="">
+                  <Label>Title</Label>
 
-                  <FormGroup>
-                    <Label>Description</Label>
-                    <Input
-                      type="textarea"
-                      disabled={loader}
-                      row={3}
-                      value={des}
-                      onChange={(e) => {
-                        setDesError("");
-                        setDes(e.target.value);
-                      }}
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={name}
+                    onReady={(editor) => {
+                      // You can store the "editor" and use when it is needed.
+                      console.log("Editor is ready to use!", editor);
+                    }}
+                    onChange={(event, editor) => {
+                      setNameError("");
+                      onTitleChange(event, editor);
+                    }}
+                  />
+                  <ErrorLine error={nameError} />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label>Description</Label>
+
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={des}
+                    onReady={(editor) => {
+                      // You can store the "editor" and use when it is needed.
+                      console.log("Editor is ready to use!", editor);
+                    }}
+                    onChange={(event, editor) => {
+                      onDescChange(event, editor);
+                    }}
+                  />
+                  <ErrorLine error={desError} />
+                </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Name</Label>
+                  <Input
+                    disabled={loader}
+                    type="text"
+                    placeholder="Meta Name"
+                    value={metaName}
+                    onChange={(e) => {
+                      setMetaName(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaNameError} />
+                </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Description </Label>
+                  <Input
+                    disabled={loader}
+                    type="textarea"
+                    placeholder="Meta Description"
+                    value={metaDescription}
+                    onChange={(e) => {
+                      setMetaDescription(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaDescriptionError} />
+                </FormGroup>
+                <FormGroup className="">
+                  <Label>Meta Keyword</Label>
+                  <Input
+                    disabled={loader}
+                    type="text"
+                    placeholder="Meta Keyword"
+                    value={metaKeyword}
+                    onChange={(e) => {
+                      setMetaKeyword(e.target.value);
+                    }}
+                  />
+                  <ErrorLine error={metaKeywordError} />
+                </FormGroup>
+                <FormGroup>
+                  <Form>
+                    Trending
+                    <FormCheck
+                      type="switch"
+                      id="trending"
+                      checked={trending}
+                      onClick={() => setTrending(!trending)}
                     />
-                    <ErrorLine error={desError} />
-                  </FormGroup>
+                  </Form>
+                </FormGroup>
+                <FormGroup>
+                  <Form>
+                    Popular
+                    <FormCheck
+                      type="switch"
+                      id="popular"
+                      checked={popular}
+                      onClick={() => {setPopular(!popular)}}
+                    />
+                  </Form>
+                </FormGroup>
+                {
+                  options && 
+                <FormGroup>
+                    <Label>
+                      Category
+                    </Label>
+                    <Select options={options} value={{value:categoryId, label:categoryName}} onChange={(e) => {
+                      setCategoryError('');
+                      setCategoryName(e.label);
+                      setCategoryId(e.value)
+                      }}/>
+                    <ErrorLine error={categoryError} />
+                </FormGroup>
+                }
                 </div>
               </div>
             </CardBody>
@@ -229,6 +385,7 @@ const AddUser = (props) => {
 const mapStateToProps = (state) => {
   return {
     cow: state.blog.blog,
+    category: state.category.categories
   };
 };
 
@@ -236,6 +393,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getCow: (id) => dispatch(gettingParticularBlog(id)),
     updateCow: (id, data) => dispatch(updatingBlog(id, data)),
+    getCategories: () => dispatch(gettingAllCategories())
   };
 };
 
