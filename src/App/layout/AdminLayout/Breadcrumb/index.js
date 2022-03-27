@@ -90,7 +90,7 @@ class Breadcrumb extends Component {
 
         }
 
-        document.title = title + ' | Bovinae Admin';
+        document.title = title + ' | Magnate Admin';
 
         return (
             <Aux>
