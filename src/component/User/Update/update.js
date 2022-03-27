@@ -96,7 +96,7 @@ const AddUser = (props) => {
     }
     const response = res.data.data;
     setName(response.title || "");
-    setPhoto(`${constants.baseURL2}/${response.blog_Picture}`);
+    setPhoto(`${constants.baseURL2}${response.blog_Picture}`);
     setDes(response.discription || "");
     setTrending(response.isTreandings);
     setPopular(response.isPopular);

@@ -24,7 +24,7 @@ class MainCard extends Component {
     cardRemoveHandler = () => {
         this.setState({cardRemove: true});
     };
-      
+
     render() {
         let fullScreenStyle, loader, cardHeaderRight, cardHeader;
         let card = '';

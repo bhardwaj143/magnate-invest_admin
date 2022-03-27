@@ -72,7 +72,7 @@ const AddUser = (props) => {
     }
     const response = res.data.data;
     setName(response.name || "");
-    setPhoto(`${constants.baseURL2}/${response.category_Picture}`);
+    setPhoto(`${constants.baseURL2}${response.category_Picture}`);
     setDes(response.discription || "");
     setPageLoader(false);
   };
