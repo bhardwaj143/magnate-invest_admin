@@ -91,6 +91,7 @@ const AddUser = (props) => {
   };
 
   useEffect(() => {
+    console.log(props.cow);
     if (props.cow) {
       setName(props.cow.name ? props.cow.name : null);
       setPhoto(
@@ -155,9 +156,16 @@ const AddUser = (props) => {
       formData.append("contact", contact);
       formData.append("about_us_detail", abd);
       formData.append("about_us_heading", abH);
-      formData.append("banner1", b1);
-      formData.append("banner2", b2);
-      formData.append("banner3", b3);
+      if(b1) {
+        formData.append("banner1", b1);
+
+      }
+      if(b2) {
+        formData.append("banner2", b2);
+      }
+      if(b3){
+        formData.append("banner3", b3);
+      }
       formData.append("facebook", fb);
       formData.append("instagram", insta);
       formData.append("twitter", twitter);
@@ -183,6 +191,8 @@ const AddUser = (props) => {
     }
   };
 
+  console.log(b1, b2, b3)
+console.log(props.cow)
   const imageHandler = (e) => {
     setPhotoUpload(e.target.files[0]);
     const reader = new FileReader();
