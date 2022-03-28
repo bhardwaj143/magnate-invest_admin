@@ -84,6 +84,8 @@ const AddUser = (props) => {
   const [nemail, setNEmail] = useState('');
   const [npassword, setNPassword] = useState('')
 
+  const [uemail, setUEmail] = useState('');
+
   useEffect(() => {
     getData();
   }, []);
@@ -129,6 +131,7 @@ const AddUser = (props) => {
       setCR(props.cow.copyRight ? props.cow.copyRight : null)
       setNEmail(props.cow.nodeMailerEmail ? props.cow.nodeMailerEmail : null)
       setNPassword(props.cow.nodeMailerPassword ? props.cow.nodeMailerPassword : null)
+      setUEmail(props.cow.userEmail ? props.cow.userEmail : null)
     }
   }, [props.cow]);
 
@@ -190,6 +193,7 @@ const AddUser = (props) => {
       formData.append("metaKeyword", mkeyword);
       formData.append("nodeMailerEmail", nemail);
       formData.append("nodeMailerPassword", npassword);
+      formData.append("userEmail", uemail);
 
       const res = await props.updateCow(id, formData);
       if (res.status && res.status === 200) {
@@ -586,6 +590,18 @@ console.log(props.cow)
                       value={npassword}
                       onChange={(e) => {
                         setNPassword(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup className="">
+                    <Label>User Email</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="user email"
+                      value={uemail}
+                      onChange={(e) => {
+                        setUEmail(e.target.value);
                       }}
                     />
                   </FormGroup>
