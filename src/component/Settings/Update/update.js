@@ -75,6 +75,15 @@ const AddUser = (props) => {
   const [errorCode, setErrorCode] = useState();
   const [src, selectFiles] = useState(null);
 
+  const [mname, setMName] = useState('');
+  const [mkeyword, setMKeyword] = useState('');
+  const [mdes, setMDes] = useState('')
+
+  const [cr, setCR] = useState('');
+
+  const [nemail, setNEmail] = useState('');
+  const [npassword, setNPassword] = useState('')
+
   useEffect(() => {
     getData();
   }, []);
@@ -114,6 +123,12 @@ const AddUser = (props) => {
       setInsta(props.cow.instagram ? props.cow.instagram : null)
       setTwitter(props.cow.twitter ? props.cow.twitter : null)
       setYt(props.cow.youtube ? props.cow.youtube : null)
+      setMName(props.cow.metaName ? props.cow.metaName : null)
+      setMKeyword(props.cow.metaKeyword ? props.cow.metaKeyword : null)
+      setMDes(props.cow.metaDescription ? props.cow.metaDescription : null)
+      setCR(props.cow.copyRight ? props.cow.copyRight : null)
+      setNEmail(props.cow.nodeMailerEmail ? props.cow.nodeMailerEmail : null)
+      setNPassword(props.cow.nodeMailerPassword ? props.cow.nodeMailerPassword : null)
     }
   }, [props.cow]);
 
@@ -170,6 +185,11 @@ const AddUser = (props) => {
       formData.append("instagram", insta);
       formData.append("twitter", twitter);
       formData.append("youtube", yt);
+      formData.append("metaName", mname);
+      formData.append("metaDescription", mdes);
+      formData.append("metaKeyword", mkeyword);
+      formData.append("nodeMailerEmail", nemail);
+      formData.append("nodeMailerPassword", npassword);
 
       const res = await props.updateCow(id, formData);
       if (res.status && res.status === 200) {
@@ -491,7 +511,83 @@ console.log(props.cow)
                         setYt(e.target.value);
                       }}
                     />
-                    <ErrorLine error={ytError} />
+                  </FormGroup>
+                  <hr/>
+                  <h4>Meta</h4>
+                  <FormGroup className="">
+                    <Label>Name</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="name"
+                      value={mname}
+                      onChange={(e) => {
+                        setMName(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup className="">
+                    <Label>Keyword</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="keyword"
+                      value={mkeyword}
+                      onChange={(e) => {
+                        setMKeyword(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup className="">
+                    <Label>Description</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="description"
+                      value={mdes}
+                      onChange={(e) => {
+                        setMDes(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup className="">
+                    <Label>Copyright</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="Copyright"
+                      value={cr}
+                      onChange={(e) => {
+                        setCR(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                      <hr/>
+                      <h4>Node Mailer</h4>
+
+                  <FormGroup className="">
+                    <Label>Email</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="Email"
+                      value={nemail}
+                      onChange={(e) => {
+                        setNEmail(e.target.value);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup className="">
+                    <Label>Password</Label>
+                    <Input
+                      disabled={loader}
+                      type="text"
+                      placeholder="Password"
+                      value={npassword}
+                      onChange={(e) => {
+                        setNPassword(e.target.value);
+                      }}
+                    />
                   </FormGroup>
             </CardBody>
             <CardFooter>
